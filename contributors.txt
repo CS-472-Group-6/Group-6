@@ -6,3 +6,6 @@ Email: fojass1@unlv.nevada.edu
 
 Name: Daniel Levy
 Email: levyd1@unlv.nevada.edu 
+
+Name: Eli Rosales
+Email: rosale5@unlv.nevada.edu
