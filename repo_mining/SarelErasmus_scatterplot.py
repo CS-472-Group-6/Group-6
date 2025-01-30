@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 import csv
 from datetime import datetime
 
@@ -52,8 +53,9 @@ scalarMap = plt.cm.ScalarMappable(norm=cNorm, cmap=cm)
 
 # Reset authors dictionary to make assigning the colors easier
 authors = dict()
+authorIndex = 0
 
-for index,rows in enumerate(authorCSV):
+for rows in authorCSV:
     currentDate = rows[0]
     currentFile = rows[1]
     currentAuthor = rows[2]
@@ -67,11 +69,18 @@ for index,rows in enumerate(authorCSV):
 
     # Assign a distinctive color to each author
     if(not currentAuthor in authors):
-        authors.update({currentAuthor:scalarMap.to_rgba(index)})
+        authors.update({currentAuthor:scalarMap.to_rgba(authorIndex)})
+        authorIndex += 1
 
     fileIndex = files.get(currentFile)
     
     plt.scatter(fileIndex,weekIndex,color=authors[currentAuthor])
+
+colors = authors.values()
+custom_lines = [Line2D([0], [0], color=color, lw=4) for color in colors]
+names = authors.keys()
+
+plt.legend(handles=custom_lines,labels=names,loc='upper center', bbox_to_anchor=(0.9, 0.5),fontsize=7)
 
 plt.xlabel('Files')
 plt.ylabel('Weeks')
