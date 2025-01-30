@@ -18,7 +18,6 @@ def github_auth(url, lsttoken, ct):
         headers = {'Authorization': 'Bearer {}'.format(lsttoken[ct])}
         request = requests.get(url, headers=headers)
         jsonData = json.loads(request.content)
-        print(jsonData['commit']['author'])
         ct += 1
     except Exception as e:
         pass
@@ -56,16 +55,17 @@ def countfiles(dictfiles, lsttokens, repo):
                 date = shaDetails['commit']['author']['date']
                 dictfiles[date] = []
                 authorName = shaDetails['commit']['author']['name']
-                print(authorName)
                 for filenameObj in filesjson:
                     filename = filenameObj['filename']
                     for ext in source_file_extensions:
                         if(filename.endswith(ext)):
                             if(ext == '.xml' and filename.startswith('.')):
                                 break
+                            if(filename.startswith('rootbeerlib')):
+                                break
 
                             dictfiles.get(date).append([authorName,filename])
-                            print(len(dictfiles[date]))
+                            print(filename)
                             break
             ipage += 1
     except:
