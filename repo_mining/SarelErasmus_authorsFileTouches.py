@@ -52,9 +52,9 @@ def countfiles(dictfiles, lsttokens, repo):
                 shaUrl = 'https://api.github.com/repos/' + repo + '/commits/' + sha
                 shaDetails, ct = github_auth(shaUrl, lsttokens, ct)
                 filesjson = shaDetails['files']
-                date = shaDetails['commit']['author']['date']
+                date = shaDetails['commit']['committer']['date']
                 dictfiles[date] = []
-                authorName = shaDetails['commit']['author']['name']
+                authorName = shaDetails['commit']['committer']['name']
                 for filenameObj in filesjson:
                     filename = filenameObj['filename']
                     for ext in source_file_extensions:
@@ -105,7 +105,6 @@ writer.writerow(rows)
 bigcount = None
 bigfilename = None
 for date, authorList in dictfiles.items():
-    print(len(authorList))
     for name, fileName in authorList:
         rows = [date,fileName,name]
         writer.writerow(rows)
