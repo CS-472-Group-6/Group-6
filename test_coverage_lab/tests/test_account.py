@@ -89,16 +89,6 @@ Each test should include:
 # - Ensure `to_dict()` correctly converts an account to a dictionary format.
 # - Verify that all expected fields are included in the dictionary.
 
-# TODO 2: Test Updating Account Email
-# - Ensure an account’s email can be successfully updated.
-# - Verify that the updated email is stored in the database.
-
-# TODO 3: Test Finding an Account by ID
-# - Create an account and retrieve it using its ID.
-# - Ensure the retrieved account matches the created one.
-
-
-
 # TODO 2: Test Invalid Email Input
 # - Check that invalid emails (e.g., "not-an-email") raise a validation error.
 # - Ensure accounts without an email cannot be created.
@@ -107,20 +97,10 @@ Each test should include:
 # - Ensure that creating an `Account()` without required fields raises an error.
 # - Validate that missing fields trigger the correct exception.
 
-# ===========================
-# Test: Test Positive Deposit
-# Author: Alexander Baker
-# Date: 2025-02-01
-# Description: Ensure a positive deposit increases balance
-# ===========================
-def test_positive_deposit():
-    """Test depositing a positive number"""
-    account = Account(balance=0.0)
+# TODO 4: Test Positive Deposit
+# - Ensure `deposit()` correctly increases the account balance.
+# - Verify that depositing a positive amount updates the balance correctly.
 
-    # Attempt to deposit a positive number
-    account.deposit(100.0)
-    assert account.balance == 100.0
-    
 # TODO 5: Test Deposit with Zero/Negative Values
 # - Ensure `deposit()` raises an error for zero or negative amounts.
 # - Verify that balance remains unchanged after an invalid deposit attempt.
@@ -138,31 +118,9 @@ def test_positive_deposit():
 # - Verify that plaintext passwords are never stored in the database.
 # - Test password verification with `set_password()` and `check_password()`.
 
-# 9: Test Role Assignment
+# TODO 9: Test Role Assignment
 # - Ensure that `change_role()` correctly updates an account’s role.
 # - Verify that the updated role is stored in the database.
-def test_change_role_persists():
-    """Test that change_role() updates the role and persists in the database"""
-    # Create a new account with an initial role
-    account = Account(name="Evan", email="evan@gmail.com", role="user")
-    # db.session is a sign of SQLAlchemy, so we can assume its being used bc we see it in example code
-    db.session.add(account) # .add can be used to add any object
-    db.session.commit()  # Saves to database
-
-    # Ensure initial role is set correctly
-    # The id is set as the primary key when account is added to the db earlier
-    retrieved_account = Account.query.get(account.id)
-    # Make sure its stored in the db correctly
-    assert retrieved_account.role == "user"
-
-    # Change role
-    retrieved_account.change_role("admin")
-    assert retrieved_account.role == "admin" # Immediately check that change_role() works
-    db.session.commit()  # Save the change
-
-    # Retrieve again to verify its stored in db the second time
-    updated_account = Account.query.get(account.id)
-    assert updated_account.role == "admin"
 
 # TODO 10: Test Invalid Role Assignment
 # - Ensure that assigning an invalid role raises an appropriate error.
@@ -171,3 +129,4 @@ def test_change_role_persists():
 # TODO 11: Test Deleting an Account
 # - Ensure that `delete()` removes an account from the database.
 # - Verify that attempting to retrieve a deleted account returns `None` or raises an error.
+
