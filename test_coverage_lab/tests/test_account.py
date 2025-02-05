@@ -6,7 +6,6 @@ from random import randrange
 import pytest
 from models import db
 from models.account import Account, DataValidationError
-from sqlalchemy.exc import IntegrityError
 
 ACCOUNT_DATA = {}
 
@@ -21,6 +20,14 @@ def load_account_data():
     db.create_all()
     yield
     db.session.close()
+
+@pytest.fixture
+def setup_account():
+    """Fixture to create a test account"""
+    account = Account(name="John businge", email="john.businge@example.com")
+    db.session.add(account)
+    db.session.commit()
+    return account
 
 @pytest.fixture(scope="function", autouse=True)
 def setup_and_teardown():
@@ -86,89 +93,47 @@ Each test should include:
 - A meaningful **commit message** when submitting their PR.
 """
 
-# TODO 1: Test Account Serialization
-# - Ensure `to_dict()` correctly converts an account to a dictionary format.
-# - Verify that all expected fields are included in the dictionary.
+# TODO 1: Test Default Values
+# - Ensure that new accounts have the correct default values (e.g., `disabled=False`).
+# - Check if an account has no assigned role, it defaults to "user".
 
 # TODO 2: Test Updating Account Email
 # - Ensure an account’s email can be successfully updated.
 # - Verify that the updated email is stored in the database.
 
-# ===========================
-# Test: Missing Required Fields
-# Author: Sarel Erasmus
-# Date: 2025-02-05
-# Description: Ensure that creating an 'Account()' without required fields raises an error.
-# ===========================
+# TODO 3: Test Finding an Account by ID
+# - Create an account and retrieve it using its ID.
+# - Ensure the retrieved account matches the created one.
 
-def test_missing_required_fields():
-    # Create account that has the required fields not included
-    account = Account()
+# TODO 4: Test Invalid Email Handling
+# - Check that invalid emails (e.g., "not-an-email") raise a validation error.
+# - Ensure accounts without an email cannot be created.
 
-    # Pytest is expecting an Integrity Error since the account object doesn't have the required fields
-    with pytest.raises(IntegrityError):
-        # Try to commit this account to the database to make sure it produces an error
-        db.session.add(account)
-        db.session.commit()
-
-# ===========================
-# Test: Test Positive Deposit
-# Author: Alexander Baker
-# Date: 2025-02-01
-# Description: Ensure a positive deposit increases balance
-# ===========================
-def test_positive_deposit():
-    """Test depositing a positive number"""
-    account = Account(balance=0.0)
-
-    # Attempt to deposit a positive number
-    account.deposit(100.0)
-    assert account.balance == 100.0
-    
-# TODO 5: Test Deposit with Zero/Negative Values
-# - Ensure `deposit()` raises an error for zero or negative amounts.
-# - Verify that balance remains unchanged after an invalid deposit attempt.
-
-# ===========================
-# Test: Valid Withdrawal
-# Author: Daniel Levy
-# Date: 2025-02-04
-# Description: Ensure `withdraw()` correctly decreases the account balance.
-#              Verify that withdrawals within available balance succeed.
-# ===========================
-def test_valid_withdrawal():
-    # Create new account for unit test
-    account = Account(name="Daniel Levy", email="levyd1@unlv.nevada.edu", balance=100.00)
-
-    # First Test: Withdraw decreases balance by the correct amount
-    original_balance = account.balance
-    account.withdraw(20)
-    assert account.balance == (original_balance-20)
-    
-    # Second Test: Withdraw is able to succeed with current available balance
-    original_balance = account.balance 
-    amount_to_decrease_balance = 30
-    account.withdraw(amount_to_decrease_balance)
-    assert account.balance > amount_to_decrease_balance
-    
-# TODO 7: Test Withdrawal with Insufficient Funds
-# - Ensure `withdraw()` raises an error when attempting to withdraw more than available balance.
-# - Verify that the balance remains unchanged after a failed withdrawal.
-
-# TODO 8: Test Password Hashing
+# TODO 5: Test Password Hashing
 # - Ensure that passwords are stored as **hashed values**.
 # - Verify that plaintext passwords are never stored in the database.
-# - Test password verification with `set_password()` and `check_password()`.
 
-# TODO 9: Test Role Assignment
-# - Ensure that `change_role()` correctly updates an account’s role.
-# - Verify that the updated role is stored in the database.
+# TODO 6: Test Account Persistence
+# - Create an account, commit the session, and restart the session.
+# - Ensure the account still exists in the database.
 
-# TODO 10: Test Invalid Role Assignment
-# - Ensure that assigning an invalid role raises an appropriate error.
-# - Verify that only allowed roles (`admin`, `user`, etc.) can be set.
+# TODO 7: Test Searching by Name
+# - Ensure accounts can be searched by their **name**.
+# - Verify that partial name searches return relevant accounts.
 
-# TODO 11: Test Deleting an Account
-# - Ensure that `delete()` removes an account from the database.
-# - Verify that attempting to retrieve a deleted account returns `None` or raises an error.
+# TODO 8: Test Bulk Insertion
+# - Create and insert multiple accounts at once.
+# - Verify that all accounts are successfully stored in the database.
 
+# TODO 9: Test Account Deactivation/Reactivate
+# - Ensure accounts can be deactivated.
+# - Verify that deactivated accounts cannot perform certain actions.
+# - Ensure reactivation correctly restores the account.
+
+# TODO 10: Test Email Uniqueness Enforcement
+# - Ensure that duplicate emails are not allowed.
+# - Verify that accounts must have a unique email in the database.
+
+# TODO 11: Test Role-Based Access
+# - Ensure users with different roles ('admin', 'user', 'guest') have appropriate permissions.
+# - Verify that role changes are correctly reflected in the database.
