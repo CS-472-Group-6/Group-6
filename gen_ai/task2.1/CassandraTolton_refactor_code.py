@@ -57,32 +57,22 @@ def selectTile(x, userInput):
             print("Error: Tile already taken")    
 
 
-def checkWinner():
-    if((board[0][0] == board[0][1] == board[0][2]) and board[0][0] != ''):
+def checkWinner(board):
+    """Check if the current player has won."""
+    # Check rows, columns, and diagonals
+    for i in range(3):
+        if board[i][0] == board[i][1] == board[i][2] != '':
+            return True
+        if board[0][i] == board[1][i] == board[2][i] != '':
+            return True
+    
+    # Check diagonals
+    if board[0][0] == board[1][1] == board[2][2] != '':
         return True
-       
-    elif((board[1][0] == board[1][1] == board[1][2]) and board[1][0] != ''):
+    if board[0][2] == board[1][1] == board[2][0] != '':
         return True
-         
-    elif((board[2][0] == board[2][1] == board[2][2]) and board[2][0] != ''):
-        return True
-       
-    elif((board[0][1] == board[1][1] == board[2][1]) and board[0][1] != ''):
-        return True
-       
-    elif((board[0][0] == board[1][0] == board[2][0]) and board[0][0] != ''):
-        return True
-       
-    elif((board[0][2] == board[1][2] == board[2][2]) and board[0][2] != ''):
-        return True
-       
-    elif((board[0][0] == board[1][1] == board[2][2]) and board[0][0] != ''):
-        return True
-       
-    elif((board[0][2] == board[1][1] == board[2][0]) and board[0][2] != ''):
-        return True
-    else:
-        return False
+
+    return False
 
 
 def printBoard(board):
@@ -114,7 +104,7 @@ while(winner == False):
         selectTile(int(userInput), "O")
 
 
-    winner = checkWinner()
+    winner = checkWinner(board)
 
 
     if(winner):
@@ -127,6 +117,7 @@ while(winner == False):
 
 
     player1 = not player1
+
 
 
 
