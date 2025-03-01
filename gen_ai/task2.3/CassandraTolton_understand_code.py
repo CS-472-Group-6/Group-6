@@ -75,6 +75,14 @@ def checkWinner(board):
     return False
 
 
+def check_draw(board):
+    """Check if the game is a draw (no empty spaces left)."""
+    for row in board:
+        if '' in row:
+            return False
+    return True
+
+
 def printBoard(board):
     print(board[0])
     print(board[1])
@@ -113,10 +121,9 @@ while(winner == False):
         else:
             print("player2 wins!")
             printBoard(board)
+    if(check_draw):
+        print("Draw!")
+        printBoard(board)
 
 
     player1 = not player1
-
-
-
-
